@@ -7,14 +7,14 @@ class RubiksCube {
         this.controls = null;
         this.cube = null;
         
-        // Rubik's cube standard colors
+        // Rubik's cube standard colors - enhanced brightness
         this.colors = {
             white: 0xffffff,   // Top
-            yellow: 0xffff00,  // Bottom
+            yellow: 0xffd700,  // Bottom - brighter gold-yellow
             red: 0xff0000,     // Front
-            orange: 0xff6500,  // Back
-            blue: 0x0000ff,    // Right
-            green: 0x00ff00    // Left
+            orange: 0xff4500,  // Back - brighter orange-red
+            blue: 0x0066ff,    // Right - brighter blue
+            green: 0x00cc00    // Left - brighter green
         };
         
         this.init();
@@ -60,26 +60,31 @@ class RubiksCube {
     }
     
     createLights() {
-        // Ambient light for general illumination
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+        // Brighter ambient light for better overall illumination
+        const ambientLight = new THREE.AmbientLight(0x606060, 0.5);
         this.scene.add(ambientLight);
         
-        // Main directional light
-        const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight1.position.set(10, 10, 5);
+        // Main directional light from top-front
+        const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.9);
+        directionalLight1.position.set(8, 8, 8);
         directionalLight1.castShadow = true;
         directionalLight1.shadow.mapSize.width = 2048;
         directionalLight1.shadow.mapSize.height = 2048;
         this.scene.add(directionalLight1);
         
-        // Secondary light for better illumination
-        const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
-        directionalLight2.position.set(-5, 5, -5);
+        // Secondary light from bottom-back to illuminate yellow and orange faces
+        const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+        directionalLight2.position.set(-5, -5, -8);
         this.scene.add(directionalLight2);
         
-        // Point light for additional depth
-        const pointLight = new THREE.PointLight(0xffffff, 0.3, 100);
-        pointLight.position.set(0, 8, 8);
+        // Additional light from the side for better color visibility
+        const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4);
+        directionalLight3.position.set(0, 5, -8);
+        this.scene.add(directionalLight3);
+        
+        // Point light for additional depth and warmth
+        const pointLight = new THREE.PointLight(0xffffff, 0.4, 100);
+        pointLight.position.set(0, 0, 10);
         this.scene.add(pointLight);
     }
     
@@ -110,14 +115,14 @@ class RubiksCube {
     createCubie(size) {
         const geometry = new THREE.BoxGeometry(size, size, size);
         
-        // Create materials for each face
+        // Create materials for each face - using MeshPhongMaterial for better color rendering
         const materials = [
-            new THREE.MeshLambertMaterial({ color: 0x222222 }), // Right
-            new THREE.MeshLambertMaterial({ color: 0x222222 }), // Left
-            new THREE.MeshLambertMaterial({ color: 0x222222 }), // Top
-            new THREE.MeshLambertMaterial({ color: 0x222222 }), // Bottom
-            new THREE.MeshLambertMaterial({ color: 0x222222 }), // Front
-            new THREE.MeshLambertMaterial({ color: 0x222222 })  // Back
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 }), // Right
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 }), // Left
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 }), // Top
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 }), // Bottom
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 }), // Front
+            new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 30 })  // Back
         ];
         
         const cubie = new THREE.Mesh(geometry, materials);
